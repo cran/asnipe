@@ -1,0 +1,5 @@
+exportPattern("^[^\\.]")
+
+S3method(print,mrqap.dsp)
+
+importFrom("stats", "fitted", "model.frame", "pf", "resid")

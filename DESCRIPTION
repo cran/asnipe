@@ -1,0 +1,16 @@
+Package: asnipe
+Type: Package
+Title: Animal Social Network Inference and Permutations for Ecologists
+Version: 0.85
+Date: 2016-01-07
+Author: Damien R. Farine <dfarine@orn.mpg.de>
+Maintainer: Damien R. Farine <dfarine@orn.mpg.de>
+Description: Implements several tools that are used in animal social network analysis. In particular, this package provides the tools to generate networks from observation data, perform permutation tests on the data, calculate lagged association rates, and performed multiple regression analysis on social network data.
+License: GPL-2
+Encoding: latin1
+Packaged: 2016-01-07 14:05:15 UTC; damienfarine
+Depends: R (>= 2.10)
+Suggests: ape, igraph, raster, sna
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2016-01-07 15:40:27
