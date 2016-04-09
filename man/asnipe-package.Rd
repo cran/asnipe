@@ -12,8 +12,8 @@ Provides functions for infering associations, building social networks, performi
 \tabular{ll}{
 Package: \tab asnipe\cr
 Type: \tab Package\cr
-Version: \tab 0.85\cr
-Date: \tab 2016-01-07\cr
+Version: \tab 0.90\cr
+Date: \tab 2016-04-03\cr
 License: \tab GPL-2 \cr
 }
 }
