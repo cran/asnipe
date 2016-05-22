@@ -1,4 +1,4 @@
-0980bc8f01c96083ab67dd9b0fb0f8ba *DESCRIPTION
+8a6bd28cba20030d4f7243e96f0f84b2 *DESCRIPTION
 e94b5d67a6e7fd1c9bc7f8d32ebc9159 *NAMESPACE
 79b3d41d8fd91b5e23e6abcd88556c7c *R/LAR.R
 74e7d19e836dd41d11cef571f8de81ca *R/LRA.R
@@ -8,8 +8,8 @@ e94b5d67a6e7fd1c9bc7f8d32ebc9159 *NAMESPACE
 507e29d9f7755bed93d9bf6c9c067a7e *R/get_sampling_periods.R
 c11448afc0797131c89f644d15a8dc6d *R/mrqap.custom.null.R
 6f4002f923a166146ee28685c7cf09b4 *R/mrqap.dsp.R
-25c84ef58f7d4ea039d695917b585ad3 *R/network_permutation.R
-217259dd46df442d72f9aaf2044b547a *R/network_swap.R
+8138415723fba0aa4c586866f857ae65 *R/network_permutation.R
+34207f055ef4c79043ef863eef2302aa *R/network_swap.R
 4f3888df0d7c91d2ff0bbbcd6888da6a *R/print.mrqap.dsp.R
 971cb60f256569f58a364c687e7d8d88 *data/group_by_individual.RData
 b0938185a31e0bf98afab4a15f6ec597 *data/identified_individuals.RData
@@ -17,7 +17,7 @@ b0938185a31e0bf98afab4a15f6ec597 *data/identified_individuals.RData
 03f47257c31a9edd66ba4aef6ec48643 *data/times.RData
 d70b234cdd0d9a13428e3051039ae82e *man/LAR.Rd
 d81aca43982f975c30f1b98876fafe4d *man/LRA.Rd
-ef428acb254218320117a546d7b8ae95 *man/asnipe-package.Rd
+eb6fd4f3dcb721d9e371a3d780f898d8 *man/asnipe-package.Rd
 eac313da5de2367ed50c0637c81d2a2d *man/gbi.Rd
 38466f48c22522848865f74045e07cb5 *man/get_associations_points_tw.Rd
 27d4d5a40081bccefc17ff0745d84a5b *man/get_group_by_individual.Rd

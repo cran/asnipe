@@ -75,12 +75,12 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 			s <- sample(1:nrow(a),1)
 			first <- a[s,]
 			if (data_format=="GBI") {
-				a <- a[which(locations[as.numeric(a[,1])] == locations[as.numeric(a[s,1])] & days[as.numeric(a[,1])] == days[as.numeric(a[s,1])] & classes[as.numeric(a[,2])] == classes[as.numeric(a[s,2])]),]
+				a <- a[which(locations[as.numeric(a[,1])] == locations[as.numeric(a[s,1])] & days[as.numeric(a[,1])] == days[as.numeric(a[s,1])] & classes[as.numeric(a[,2])] == classes[as.numeric(a[s,2])]),,drop=FALSE]
 				second <- a[sample(1:nrow(a),1),]
 				if (first[1]!=second[1]&first[2]!=second[2]&(sum(association_data_perm[first[1],first[2]]) > 0 & sum(association_data_perm[second[1],second[2]]) > 0) & (sum(association_data_perm[second[1],first[2]]) == 0 & sum(association_data_perm[first[1],second[2]]) == 0)) { break; }
 			}
 			if (data_format=="SP") {
-				a <- a[which(a[,1] == a[s,1] & classes[as.numeric(a[,2])] == classes[as.numeric(a[s,2])] & classes[as.numeric(a[,3])] == classes[as.numeric(a[s,3])]),]
+				a <- a[which(a[,1] == a[s,1] & classes[as.numeric(a[,2])] == classes[as.numeric(a[s,2])] & classes[as.numeric(a[,3])] == classes[as.numeric(a[s,3])]),,drop=FALSE]
 				second <- a[sample(1:nrow(a),1),]
 				if (first[2]!=second[2]&first[3]!=second[3]&(sum(association_data_perm[first[1],first[2],first[3]]) > 0 & sum(association_data_perm[second[1],second[2],second[3]]) > 0) & (sum(association_data_perm[second[1],second[2],first[3]]) == 0 & sum(association_data_perm[first[1],first[2],second[3]]) == 0)) { break; }
 			}
