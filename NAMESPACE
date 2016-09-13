@@ -1,5 +1,8 @@
-exportPattern("^[^\\.]")
+export(get_group_by_individual,get_network,get_sampling_periods,gmmevents,LAR,LRA,mrqap.custom.null,mrqap.dsp,network_permutation,network_swap,print.mrqap.dsp,get_associations_points_tw)
 
 S3method(print,mrqap.dsp)
 
-importFrom("stats", "fitted", "model.frame", "pf", "resid")
+importFrom("stats", "fitted", "model.frame", "pf", "resid", "median", "rnorm", "runif", "sd")
+
+import("Matrix")
+import("MASS")

@@ -12,6 +12,7 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 	if (within_day & is.null(days)) { stop("Cannot constrict within days if days are not supplied") }
 	if (within_location & is.null(locations)) { stop("Cannot constrict within location if locations are not supplied") }
 	if (within_class & is.null(classes)) { stop("Cannot constrict within class if classes are not supplied") }
+	if (!is.null(locations)) { locations <- as.matrix(locations) } # Fixes bug with data frames
 	
 	if (!within_day) { days <- rep(1,nrow(association_data)) }
 	if (!within_location) { locations <- rep(1,nrow(association_data)) }
