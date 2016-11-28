@@ -15,6 +15,7 @@ get_network <- function(association_data, data_format = "GBI", association_index
 	if ((!is.null(which_classes) & is.null(classes)) == TRUE) { stop("Cannot apply which_class without classes data") }
 	if (!any(association_index %in% c("SRI","HWI"))) { stop("Unknown association_index") }
 
+	association_data <- as.matrix(association_data)
 	
 
 	#### SUBSET THE DATA

@@ -8,7 +8,7 @@ Infer gathering events
 Infer gathering events (groups or flocks) from a temporal datastream of observations, such as PIT tag data.
 }
 \usage{
-gmmevents(time, identity, location, global_ids=NULL, verbose=TRUE)
+gmmevents(time, identity, location, global_ids=NULL, verbose=TRUE, splitGroups=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,6 +27,9 @@ A vector of all the IDs in the study, used if consistency needs to be maintained
   \item{verbose}{
 Whether to print out progress and information.
 }
+  \item{splitGroups}{
+Whether or not to split overlappling groups (see details).
+}
 }
 \details{
 The gmmevents function has 3 primary inputs: time, identity, and location:
@@ -43,7 +46,9 @@ Further notes on usage:
 
 The gmm_events functions requires a few careful considerations. First, the amount of memory used is the square of the amount of data - so having many observations in a given location can run out of memory. With 16gb of RAM, generally up to 10,000 observations per location (per day - see next point) seems to be a safe limit.
 
-The input data provide for each location should take into account any artificial gaps in the observation stream. For example, if there are gaps in data collection at a given location, then the location information provided into the gmm_events function should be split into two 'locations' to represent each continuous set of observations. For example, in the PIT tag data set provided there are 8 days of sampling. Providing gmm_events with only the location data from the original data will cause the gap between days to override any gaps between groups (or flocks) within a given day. To overcome this, instead of providing the gmm_events function with just the location, it is important to provide a location by day variable. This variable is then returned in the metadata and the information extracted out again (using strsplit - see example below). 
+The input data provided for each location should take into account any artificial gaps in the observation stream. For example, if there are gaps in data collection at a given location, then the location information provided into the gmm_events function should be split into two 'locations' to represent each continuous set of observations. For example, in the PIT tag data set provided there are 8 days of sampling. Providing gmm_events with only the location data from the original data will cause the gap between days to override any gaps between groups (or flocks) within a given day. To overcome this, instead of providing the gmm_events function with just the location, it is important to provide a location by day variable. This variable is then returned in the metadata and the information extracted out again (using strsplit - see example below). 
+
+Finally, I have included a new variable called splitGroups. The original function (in both Matlab and R) would return the occasional group that overlapped other groups. This occured when a small group was extracted from the data, and then the remaining observations were formed into a larger group that spanned the smaller group from the same location. For example, say detections of individuals are made in the same location at 2,8,10,11,12,14,20 seconds, and the first group extracted contains 10,11,12 then the remaining data look like an evenly-spread group (2,8,14,20). Setting splitGroups=TRUE identifies such incidences and would split the data into three groups (2,8), (10,11,12), and (14,20). 
 
 }
 \value{
@@ -53,7 +58,7 @@ The first item is the group by individual matrix (gbi), which is a matrix where 
 
 The second item is a matrix containing three columns: the start time, end time, and location of each detected event. The number of rows in this events matrix matches the number of rows in the gbi file, and the rows correspond to one another (thus, row 3 of the gbi has the start and end times, and location, of row 3 of the events matrix).
 
-The third item has the same structure as the group by individual matrix, but instead of being binary (0 or 1), it contains the number of observation of individuals in each event.
+The third item has the same structure as the group by individual matrix, but instead of being binary (0 or 1), it contains the number of observations of each individual in each event.
 }
 \references{
 Psorakis, I., Roberts, S. J., Rezek, I., & Sheldon, B. C. (2012). Inferring social network structure in ecological systems from spatio-temporal data streams. Journal of the Royal Society Interface, 9(76), 3055-3066. doi:10.1098/Rsif.2012.0223 \cr
@@ -83,9 +88,6 @@ Damien R. Farine (current implementation)
 	# individuals provided in the data set (in this case 151
 	# individuals)
 	global_ids <- levels(identified_individuals$ID)
-
-	# Subset input data (Day 1)
-	identified_individuals <- identified_individuals[which(identified_individuals$Date < 2),]
 	
 	# Generate GMM data
 	gmm_data <- gmmevents(time=identified_individuals$Time,
@@ -96,6 +98,7 @@ Damien R. Farine (current implementation)
 	# Extract output
 	gbi <- gmm_data$gbi
 	events <- gmm_data$metadata
+	observations_per_event <- gmm_data$B
 
 	# Can also subset gbi to only individuals observed
 	# in the dataset to give same answer as if 
