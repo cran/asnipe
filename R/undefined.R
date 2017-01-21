@@ -19,7 +19,11 @@ infer_graph_from_datastream_mmVB = function(DATA,verbose=T){
 	Y = t(gmm$pjgx)
 	
 	
-	Y_hard = t(get_hard_incidence_matrix(Y))
+	Y_hard=get_hard_incidence_matrix(Y)
+	if(!is.matrix(Y_hard)){
+		Y_hard=mlmatrix(Y_hard)
+	}
+    	Y_hard = t(Y_hard)
 	
 
 	active_clusters = colSums(Y_hard)>0
