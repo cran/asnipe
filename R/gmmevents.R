@@ -124,11 +124,17 @@ gmmevents = function(time,identity,location,global_ids=NULL,verbose=TRUE, splitG
 						cur.event <- c(cur.event,T.t$Order[which(T.t$Start == time.t[i])])
 					}
 					event[i] <- cur.event[length(cur.event)]
-					if (any(time.t[i] %in% T.t$End)) {
-						cur.event <- cur.event[which(cur.event != T.t$Order[which(T.t$End == time.t[i])])]
+					if (i < length(time.t)) {
+						if (any(time.t[i] %in% T.t$End) & time.t[i] < time.t[i+1]) {
+							cur.event <- cur.event[which(cur.event != T.t$Order[which(T.t$End == time.t[i])])]
+						}
+					} else {
+						if (any(time.t[i] %in% T.t$End)) {
+							cur.event <- cur.event[which(cur.event != T.t$Order[which(T.t$End == time.t[i])])]
+						}
 					}
 				}
-		
+
 				if (any(T.t$Unique == FALSE, na.rm=TRUE)) {
 					g <- min(T.t$Order[which(T.t$Unique==FALSE)])
 					

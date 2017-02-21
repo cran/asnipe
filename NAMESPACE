@@ -4,5 +4,7 @@ S3method(print,mrqap.dsp)
 
 importFrom("stats", "fitted", "model.frame", "pf", "resid", "median", "rnorm", "runif", "sd")
 
+importFrom("graphics", "abline", "hist")
+
 import("Matrix")
 import("MASS")
