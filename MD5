@@ -1,4 +1,4 @@
-a178b384d04265d5ecb37bff44864fdf *DESCRIPTION
+b6d35fc408c07e8757363867e217c3a5 *DESCRIPTION
 52ef8a726e20fb911b5bb1c0876089b6 *NAMESPACE
 79b3d41d8fd91b5e23e6abcd88556c7c *R/LAR.R
 74e7d19e836dd41d11cef571f8de81ca *R/LRA.R
@@ -21,11 +21,11 @@ b0938185a31e0bf98afab4a15f6ec597 *data/identified_individuals.RData
 03f47257c31a9edd66ba4aef6ec48643 *data/times.RData
 d70b234cdd0d9a13428e3051039ae82e *man/LAR.Rd
 d81aca43982f975c30f1b98876fafe4d *man/LRA.Rd
-3de9121597a9c8b2cfcc7dc3d4b0af22 *man/asnipe-package.Rd
+435d828a413d18ddb2ec52ac001710c7 *man/asnipe-package.Rd
 eac313da5de2367ed50c0637c81d2a2d *man/gbi.Rd
 38466f48c22522848865f74045e07cb5 *man/get_associations_points_tw.Rd
 27d4d5a40081bccefc17ff0745d84a5b *man/get_group_by_individual.Rd
-c6efbd7d234899b9c380030eca20728e *man/get_network.Rd
+799583b8aed7d26b0dbeb209603f6e6b *man/get_network.Rd
 072d3769d50a364216812d510884c87f *man/get_sampling_periods.Rd
 d1a97fa6dd430971424a6beb0e302f98 *man/gmmevents.Rd
 45d0027bfe7373d54484a20dbdb21c74 *man/identified_individuals.Rd

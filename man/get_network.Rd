@@ -85,10 +85,12 @@ library(ape)
 mantel.test(networks[1,,],networks[2,,])
 
 ## convert to igraph network and calculate degree of the first network
+\dontrun{
 library(igraph)
 net <- graph.adjacency(networks[1,,], mode="undirected", diag=FALSE, weighted=TRUE)
 deg_weighted <- graph.strength(net)
 detach(package:igraph)
+}
 
 ## alternatively package SNA can use matrix stacks directly
 library(sna)
