@@ -95,6 +95,9 @@ Damien R. Farine
 data("group_by_individual")
 data("times")
 
+# subset GBI (to reduce run time of the example)
+gbi <- gbi[,1:80]
+
 ## define to 2 x N x N network to hold two association matrices
 networks <- array(0, c(2, ncol(gbi), ncol(gbi)))
 

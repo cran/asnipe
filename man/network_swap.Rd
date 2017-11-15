@@ -70,6 +70,9 @@ Damien R. Farine
 data("group_by_individual")
 data("times")
 
+# subset GBI (to reduce run time of the example)
+gbi <- gbi[,1:80]
+
 # calculate network for data based on morning associations
 network <- get_network(gbi, association_index="SRI", 
 	times=times, start_time=0, end_time=max(times)/2)

@@ -85,6 +85,27 @@ get_network <- function(association_data, data_format = "GBI", association_index
 		}
 		out
 	}
+
+	do.SR.time <- function(GroupBy,input,association_index, times){
+		jumps <- c(seq(0,ncol(input),50))
+		if (max(jumps) < ncol(input)) {
+			jumps <- c(jumps,ncol(input))
+		}
+		out <- matrix(nrow=0,ncol=1)
+		for (i in 1:(length(jumps)-1)) {
+			tmp <- input[ ,GroupBy] + input[,(jumps[i]+1):jumps[i+1],drop=FALSE]
+			x <- colSums(tmp==2)
+			yab <- apply(tmp,2,function(x) { sum(table(times[x==1])==2) })
+			y <- colSums(tmp==1)-(2*yab)
+			if (association_index == "SRI") {
+				out <- c(out, x / (x + y + yab))
+			} else if (association_index == "HWI") {
+				out <- c(out, x / (x + y + 0.5*yab))
+			}
+		}
+		out
+	}
+	
 	
 	do.SR2 <- function (i, a,association_index) {
 		# how many times 1 seen together with all others
@@ -111,7 +132,9 @@ get_network <- function(association_data, data_format = "GBI", association_index
 	
 	cat(paste("Generating ", ncol(association_data), " x ", ncol(association_data), " matrix\n"))
 
-	if (data_format=="GBI") fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR,input=association_data, association_index))
+	if (data_format=="GBI" & is.null(times)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR,input=association_data, association_index))
+
+	if (data_format=="GBI" & !is.null(times)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR.time,input=association_data, association_index, times))
 	
 	if (data_format=="SP") fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR2,a=association_data, association_index))
 		

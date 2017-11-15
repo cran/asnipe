@@ -69,6 +69,9 @@ Damien R. Farine
 data("group_by_individual")
 data("times")
 
+# subset GBI (to reduce run time of the example)
+gbi <- gbi[,1:80]
+
 ## define to 2 x N x N network to hold two association matrices
 networks <- array(0, c(2, ncol(gbi), ncol(gbi)))
 
@@ -90,11 +93,11 @@ library(igraph)
 net <- graph.adjacency(networks[1,,], mode="undirected", diag=FALSE, weighted=TRUE)
 deg_weighted <- graph.strength(net)
 detach(package:igraph)
-}
+
 
 ## alternatively package SNA can use matrix stacks directly
 library(sna)
 deg_weighted <- degree(networks,gmode="graph", g=c(1,2), ignore.eval=FALSE)
 detach(package:sna)
-
+}
 }

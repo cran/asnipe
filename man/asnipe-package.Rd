@@ -13,7 +13,7 @@ Provides functions for infering associations, building social networks, performi
 Package: \tab asnipe\cr
 Type: \tab Package\cr
 Version: \tab 1.1.4\cr
-Date: \tab 2017-07-24\cr
+Date: \tab 2017-11-15\cr
 License: \tab GPL-2 \cr
 }
 }
