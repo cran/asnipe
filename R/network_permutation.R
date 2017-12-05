@@ -91,8 +91,25 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 			tmp <- input[ ,GroupBy] + input
 			x <- colSums(tmp==2)
 			yab <- colSums(tmp==1)
-			out <- (x / (x + yab))
-		out
+			if (association_index == "SRI") {
+				out <-  x / (x + yab)
+			} else if (association_index == "HWI") {
+				out <- x / (x + 0.5*yab)
+			}
+		return(out)
+	}
+
+	do.SR_perm.times <- function(GroupBy,input,times) {
+		tmp <- input[ ,GroupBy] + input
+		x <- colSums(tmp==2)
+		yab <- apply(tmp,2,function(x) { sum(table(times[x==1])==2) })
+		y <- colSums(tmp==1)-(2*yab)
+		if (association_index == "SRI") {
+			out <- x / (x + y + yab)
+		} else if (association_index == "HWI") {
+			out <- x / (x + y + 0.5*yab)
+		}
+		return(out)
 	}
 	
 	do.SR2_perm <- function(i, a, association_index) {
@@ -144,8 +161,13 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 			association_data_perm[first[1],first[2]] <- 0
 			association_data_perm[second[1],second[2]] <- 0
 		
-			tmp1 <- do.SR_perm(first[2],association_data_perm)
-			tmp2 <- do.SR_perm(second[2],association_data_perm)
+			if (data_format=="GBI" & is.null(times)) {
+				tmp1 <- do.SR_perm(first[2],association_data_perm)
+				tmp2 <- do.SR_perm(second[2],association_data_perm)
+			} else {
+				tmp1 <- do.SR_perm.times(first[2],association_data_perm,times)
+				tmp2 <- do.SR_perm.times(second[2],association_data_perm,times)
+			}
 		}
 		if (data_format=="SP") {
 			association_data_perm[first[1],second[2],first[3]] <- association_data_perm[first[1],first[2],first[3]]

@@ -1,4 +1,4 @@
-network_swap <- function(association_data, data_format = "GBI", swaps=1, association_index = "SRI", association_matrix = NULL, locations = NULL, classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE) {
+network_swap <- function(association_data, data_format = "GBI", swaps=1, association_index = "SRI", association_matrix = NULL, times=NULL, locations = NULL, classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE) {
 	
 	permutations <- swaps
 	
@@ -36,14 +36,33 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 	fradj_sorted2 <- fradj_sorted
 	n_inds <- ncol(association_data_perm)
 	
+
 	# Calculate network
 	do.SR_perm <- function(GroupBy,input){
 			tmp <- input[ ,GroupBy] + input
 			x <- colSums(tmp==2)
 			yab <- colSums(tmp==1)
-			out <- (x / (x + yab))
-		out
+			if (association_index == "SRI") {
+				out <-  x / (x + yab)
+			} else if (association_index == "HWI") {
+				out <- x / (x + 0.5*yab)
+			}
+		return(out)
 	}
+
+	do.SR_perm.times <- function(GroupBy,input,times) {
+		tmp <- input[ ,GroupBy] + input
+		x <- colSums(tmp==2)
+		yab <- apply(tmp,2,function(x) { sum(table(times[x==1])==2) })
+		y <- colSums(tmp==1)-(2*yab)
+		if (association_index == "SRI") {
+			out <- x / (x + y + yab)
+		} else if (association_index == "HWI") {
+			out <- x / (x + y + 0.5*yab)
+		}
+		return(out)
+	}
+
 	
 	do.SR2_perm <- function(i, a, association_index) {
 		# how many times 1 seen together with all others
@@ -94,8 +113,13 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 			association_data_perm[first[1],first[2]] <- 0
 			association_data_perm[second[1],second[2]] <- 0
 		
-			tmp1 <- do.SR_perm(first[2],association_data_perm)
-			tmp2 <- do.SR_perm(second[2],association_data_perm)
+			if (data_format=="GBI" & is.null(times)) {
+				tmp1 <- do.SR_perm(first[2],association_data_perm)
+				tmp2 <- do.SR_perm(second[2],association_data_perm)
+			} else {
+				tmp1 <- do.SR_perm.times(first[2],association_data_perm,times)
+				tmp2 <- do.SR_perm.times(second[2],association_data_perm,times)
+			}
 		}
 		if (data_format=="SP") {
 			association_data_perm[first[1],second[2],first[3]] <- association_data_perm[first[1],first[2],first[3]]

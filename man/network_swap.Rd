@@ -9,9 +9,9 @@ Performs one (or more) random swap on the data and re-calculates network, return
 }
 \usage{
 network_swap(association_data, data_format = "GBI", swaps = 1, 
-	association_index = "SRI", association_matrix = NULL, locations = NULL, 
-	classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, 
-	within_class = FALSE)
+	association_index = "SRI", association_matrix = NULL, times = NULL, 
+	locations = NULL, classes = NULL, days = NULL, within_day = FALSE, 
+	within_location = FALSE, within_class = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,6 +29,9 @@ number of swaps (default = 1000)
 }
   \item{association_matrix}{
 provide a starting association matrix (see details)
+}
+  \item{times}{
+K vector of times defining the middle of each group/event
 }
   \item{locations}{
 K vector of locations defining the location of each group/event
