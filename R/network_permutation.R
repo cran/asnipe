@@ -67,7 +67,10 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 	if (is.null(association_matrix)) {
 	
 		cat(paste("No association matrix provided, generating ", ncol(association_data), " x ", ncol(association_data), " matrix\n"))
-		fradj_sorted <- get_network(association_data,data_format)
+		fradj_sorted <- get_network(association_data,data_format=data_format, association_index = "SRI", identities = identities, 
+					which_identities = which_identities, times = times, locations = locations, 
+					which_locations = which_locations, start_time = start_time, end_time = end_time, 
+					classes = classes, which_classes = which_classes)
 
 	} else {
 		fradj_sorted <- association_matrix

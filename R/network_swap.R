@@ -1,4 +1,4 @@
-network_swap <- function(association_data, data_format = "GBI", swaps=1, association_index = "SRI", association_matrix = NULL, times=NULL, locations = NULL, classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE) {
+network_swap <- function(association_data, data_format = "GBI", swaps=1, association_index = "SRI", association_matrix = NULL, identities = NULL, which_identities = NULL, times = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE) {
 	
 	permutations <- swaps
 	
@@ -6,13 +6,55 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 	if (is.null(association_data)) { stop("No association_data data!") }
 	if (length(dim(association_data)) != 2 & data_format=="GBI") { stop("Invalid dimensions for association_data") }
 	if (length(dim(association_data)) != 3 & data_format=="SP") { stop("Invalid dimensions for association_data") }
+	if ((length(identities) != ncol(association_data) & !is.null(identities)) == TRUE) { stop("Length of identities does not match number of individuals") }
+	if ((length(times) != nrow(association_data) & !is.null(times)) == TRUE) { stop("Length of times does not match number of groups") }
 	if ((length(locations) != nrow(association_data) & !is.null(locations)) == TRUE) { stop("Length of locations does not match number of groups") }
 	if ((length(classes) != ncol(association_data) & !is.null(classes)) == TRUE) { stop("Length of classes does not match number of individuals") }
+	if ((!is.null(which_identities) & is.null(identities)) == TRUE) { stop("Cannot apply which_identities without identities data") }
+	if ((!is.null(which_locations) & is.null(locations)) == TRUE) { stop("Cannot apply which_locations without locations data") }
+	if ((!is.null(start_time) & is.null(times)) == TRUE) { stop("Cannot apply start_time without times data") }
+	if ((!is.null(end_time) & is.null(times)) == TRUE) { stop("Cannot apply end_time without times data") }
+	if ((!is.null(which_classes) & is.null(classes)) == TRUE) { stop("Cannot apply which_class without classes data") }
 	if (!any(association_index %in% c("SRI","HWI"))) { stop("Unknown association_index") }
 	if (within_day & is.null(days)) { stop("Cannot constrict within days if days are not supplied") }
 	if (within_location & is.null(locations)) { stop("Cannot constrict within location if locations are not supplied") }
 	if (within_class & is.null(classes)) { stop("Cannot constrict within class if classes are not supplied") }
 	if (!is.null(locations)) { locations <- as.matrix(locations) } # Fixes bug with data frames
+
+	#### SUBSET THE DATA
+	# By identity
+	if (!is.null(which_identities)) {
+		if (data_format=="GBI") association_data <- association_data[,which(identities %in% which_identities)]
+		if (data_format=="SP") association_data <- association_data[,which(identities %in% which_identities),which(identities %in% which_identities)]
+		identities <- identities[which(identities %in% which_identities)]
+	}
+	
+	# By time
+	if (!is.null(start_time) & is.null(end_time)) { end_time <- max(times) }
+	if (!is.null(end_time) & is.null(start_time)) { start_time <- min(times) }
+	if (!is.null(start_time) & !is.null(end_time)) {
+		subs <- which(times >= start_time & times <= end_time)
+		if (data_format=="GBI") association_data <- association_data[subs,]
+		if (data_format=="SP") association_data <- association_data[subs,,]
+		locations <- locations[subs]
+		times <- times[subs]
+	}
+	
+	# By location
+	if (!is.null(which_locations)) {
+		subs <- which(locations %in% which_locations)
+		if (data_format=="GBI") association_data <- association_data[subs,]
+		if (data_format=="SP") association_data <- association_data[subs,,]
+		locations <- locations[subs]
+		times <- times[subs]
+	}
+	
+	# By class
+	if (!is.null(which_classes)) {
+		if (data_format=="GBI") association_data <-  association_data[,which(classes %in% which_classes)]
+		if (data_format=="SP") association_data <- association_data[,which(classes %in% which_classes),which(classes %in% which_classes)]
+		identities <- identities[which(classes %in% which_classes)]
+	}
 	
 	if (!within_day) { days <- rep(1,nrow(association_data)) }
 	if (!within_location) { locations <- rep(1,nrow(association_data)) }
@@ -21,14 +63,25 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 	
 	#### GENERATE NETWORK IF REQUIRED
 	### Calculate Network
+	
+
 		
 	if (is.null(association_matrix)) {
 	
-		fradj_sorted <- get_network(association_data,data_format)
+		cat(paste("No association matrix provided, generating ", ncol(association_data), " x ", ncol(association_data), " matrix\n"))
+		fradj_sorted <- get_network(association_data,data_format=data_format, association_index = "SRI", identities = identities, 
+					which_identities = which_identities, times = times, locations = locations, 
+					which_locations = which_locations, start_time = start_time, end_time = end_time, 
+					classes = classes, which_classes = which_classes)
 
 	} else {
 		fradj_sorted <- association_matrix
 	}
+
+	if (!is.null(identities)) {
+		colnames(fradj_sorted) <- identities
+		rownames(fradj_sorted) <- identities
+	}	
 
 
 	#### DO PERMUTATIONS
@@ -36,7 +89,6 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 	fradj_sorted2 <- fradj_sorted
 	n_inds <- ncol(association_data_perm)
 	
-
 	# Calculate network
 	do.SR_perm <- function(GroupBy,input){
 			tmp <- input[ ,GroupBy] + input
@@ -62,7 +114,6 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 		}
 		return(out)
 	}
-
 	
 	do.SR2_perm <- function(i, a, association_index) {
 		# how many times 1 seen together with all others
@@ -138,7 +189,6 @@ network_swap <- function(association_data, data_format = "GBI", swaps=1, associa
 		
 		diag(fradj_sorted2) <- 0
 		
-	}
-	
+	}	
 	return(list(Association_index=fradj_sorted2, Association_data=association_data_perm))
 }

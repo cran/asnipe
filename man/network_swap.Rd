@@ -9,8 +9,10 @@ Performs one (or more) random swap on the data and re-calculates network, return
 }
 \usage{
 network_swap(association_data, data_format = "GBI", swaps = 1, 
-	association_index = "SRI", association_matrix = NULL, times = NULL, 
-	locations = NULL, classes = NULL, days = NULL, within_day = FALSE, 
+	association_index = "SRI", association_matrix = NULL, 
+	identities = NULL, which_identities = NULL, times = NULL, locations = NULL, 
+	which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, 
+	which_classes = NULL, days = NULL, within_day = FALSE, 
 	within_location = FALSE, within_class = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -30,14 +32,32 @@ number of swaps (default = 1000)
   \item{association_matrix}{
 provide a starting association matrix (see details)
 }
+  \item{identities}{
+N vector of identifiers for each individual (column) in the group by individual matrix
+}
+  \item{which_identities}{
+vector of identities to include in the network (subset of identities)
+}
   \item{times}{
 K vector of times defining the middle of each group/event
 }
   \item{locations}{
 K vector of locations defining the location of each group/event
 }
+  \item{which_locations}{
+vector of locations to include in the network (subset of locations)
+}
+  \item{start_time}{
+element describing the starting time for inclusion in the network (useful for temporal analysis)
+}
+  \item{end_time}{
+element describing the ending time for inclusion in the network (useful for temporal analysis)
+}
   \item{classes}{
 N vector of types or class of each individual (column) in the group by individual matrix (for subsetting)
+}
+  \item{which_classes}{
+vector of class(es)/type(s) to include in the network (subset of classes)
 }
   \item{days}{
 K vector of day stamp for each event (can be integer or string representing any period of time)
