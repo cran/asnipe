@@ -10,9 +10,9 @@ Calculate a network from a group by individual matrix.  This function allows var
 \usage{
 get_network(association_data, data_format = "GBI", 
 	association_index = "SRI", identities = NULL, 
-	which_identities = NULL, times = NULL, locations = NULL, 
-	which_locations = NULL, start_time = NULL, end_time = NULL, 
-	classes = NULL, which_classes = NULL)
+	which_identities = NULL, times = NULL, occurrences = NULL,
+	locations = NULL, which_locations = NULL, start_time = NULL, 
+	end_time = NULL, classes = NULL, which_classes = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,6 +33,9 @@ vector of identities to include in the network (subset of identities)
 }
   \item{times}{
 K vector of times defining the middle of each group/event
+}
+  \item{occurrences}{
+N x S matrix with the occurrence of each individual in each sampling period (see details) containing only 0s and 1s
 }
   \item{locations}{
 K vector of locations defining the location of each group/event
@@ -55,6 +58,9 @@ vector of class(es)/type(s) to include in the network (subset of classes)
 }
 \details{
 Provides the ability to generate networks from one group by individual matrix and subsetting within the function.  This is particularly useful for generating several networks with different characteristics from the same group by individual matrix (for example networks from a given location or set of locations, or of a particular sex).
+
+Including occurrence data is recommended when using sampling periods (not required for GBI data). If an individual is only observed alone in a sampling period, then it will not be included in the sampling period matrices (as these record only associations or interactions, not presence). Thus, a matrix containing N (for number of individuals) rows and S (for number of sampling periods) is required. See the get_sampling_periods function for help generating this matrix.
+
 }
 \value{
 \code{N x N} matrix of association weights for each dyad.

@@ -1,4 +1,4 @@
-get_network <- function(association_data, data_format = "GBI", association_index = "SRI", identities = NULL, which_identities = NULL, times = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL) {
+get_network <- function(association_data, data_format = "GBI", association_index = "SRI", identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL) {
 
 	#### CHECK INPUTS
 	if (is.null(association_data)) { stop("No association_data data!") }
@@ -6,6 +6,8 @@ get_network <- function(association_data, data_format = "GBI", association_index
 	if (length(dim(association_data)) != 3 & data_format=="SP") { stop("Invalid dimensions for association_data") }
 	if ((length(identities) != ncol(association_data) & !is.null(identities)) == TRUE) { stop("Length of identities does not match number of individuals") }
 	if ((length(times) != nrow(association_data) & !is.null(times)) == TRUE) { stop("Length of times does not match number of groups") }
+	if ((length(occurrences[1,]) != nrow(association_data) & !is.null(occurrences)) == TRUE) { stop("Number of occurrence periods does not match number of sampling periods") }
+	if ((length(occurrences[,1]) != ncol(association_data) & !is.null(occurrences)) == TRUE) { stop("Number of individuals in occurrences does not match number of individuals in sampling periods") }
 	if ((length(locations) != nrow(association_data) & !is.null(locations)) == TRUE) { stop("Length of locations does not match number of groups") }
 	if ((length(classes) != ncol(association_data) & !is.null(classes)) == TRUE) { stop("Length of classes does not match number of individuals") }
 	if ((!is.null(which_identities) & is.null(identities)) == TRUE) { stop("Cannot apply which_identities without identities data") }
@@ -129,6 +131,34 @@ get_network <- function(association_data, data_format = "GBI", association_index
 		}
 		return(out)
 	}
+
+	do.SR2.occurrences <- function (i, a, association_index, occurrences) {
+		# how many times 1 seen together with all others
+		x <- apply(a[,i,],2,sum)
+
+		# how many times 1 but not others in a sampling period and vice versa
+		seen <- sweep(occurrences,2,occurrences[i,],"+")
+		yab <- rowSums(seen==2)-x
+		ya_b <- rowSums(seen==1)
+		
+		#n <- apply(a,1,rowSums)
+		#n[n>0] <- 1
+		#seen <- t(apply(n,1,function(x) x-n[i,]))
+		#ya <- rowSums(seen<0)
+		#yb <- rowSums(seen>0)
+
+		# how many times 1 and others seen but not together
+		#seen <- t(apply(n,1,function(x) x+n[i,]))
+		#yab <- rowSums(seen>1) - x
+		
+		if (association_index == "SRI") {
+			out <- x / (x + ya_b + yab)
+		} else if (association_index == "HWI") {
+			out <- x / (x + ya_b + 0.5*yab)
+		}
+		return(out)
+	}
+
 	
 	cat(paste("Generating ", ncol(association_data), " x ", ncol(association_data), " matrix\n"))
 
@@ -136,8 +166,9 @@ get_network <- function(association_data, data_format = "GBI", association_index
 
 	if (data_format=="GBI" & !is.null(times)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR.time,input=association_data, association_index, times))
 	
-	if (data_format=="SP") fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR2,a=association_data, association_index))
-		
+	if (data_format=="SP" & is.null(occurrences)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR2,a=association_data, association_index))
+
+	if (data_format=="SP" & !is.null(occurrences)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR2.occurrences,a=association_data, association_index, occurrences))
 	
 	fradj_sorted[is.nan(fradj_sorted)] <- 0
 	diag(fradj_sorted) <- 0

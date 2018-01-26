@@ -1,7 +1,15 @@
-get_sampling_periods <- function(association_data, association_times, sampling_period, identities = NULL, location = NULL, within_locations = FALSE, data_format = c("gbi","groups", "individuals")) {
+get_sampling_periods <- function(association_data, association_times, sampling_period, identities = NULL, location = NULL, within_locations = FALSE, data_format = c("gbi","groups", "individuals"), return="SP") {
 
 
-	period <- round(as.numeric(association_times)/sampling_period)
+	if (is.numeric(association_times)) {
+		period <- round(association_times/sampling_period)
+	} else {
+		if (sampling_period == 1) {
+			period <- as.character(association_times)
+		} else {
+			stop("Cannot calculate periods with sampling_period != 1 and non-numeric association_times")
+		}
+	}
 	periods <- unique(period)
 	
 	if (within_locations == TRUE) {
@@ -33,9 +41,9 @@ get_sampling_periods <- function(association_data, association_times, sampling_p
 	}
 	if (n_inds==0) stop("Error calculating number of individuals")
 	
-	sampling_periods <- array(0,c(length(periods),n_inds,n_inds))
+	if (return=="SP") {
+	sampling_periods <- array(0,c(length(periods),n_inds,n_inds), dimnames = list(periods, ids, ids))
 		
-	
 	for (i in periods) {
 		
 		# GBI format
@@ -67,11 +75,30 @@ get_sampling_periods <- function(association_data, association_times, sampling_p
 	
 	}
 	
-	rownames(sampling_periods) <- periods
-	
-	dimnames(sampling_periods)[[3]] <- ids
-	dimnames(sampling_periods)[[2]] <- ids
-	
 	return(sampling_periods)
+	} else {
+		if (sampling_period == 1 & within_locations == FALSE) {
+		if (data_format == "individuals") {
+			tab=table(association_data[,1],sampling_period=association_times)
+			return(tab[,periods])
+		}
+		if (data_format == "groups") {
+			tab <- matrix(0, n_inds, length(periods), dimnames=list(ids, periods))
+			for (i in 1:length(periods)) {
+				tab[which(ids %in% unlist(association_data[period==periods[i]])),i] <- 1
+			}
+			return(tab)
+		}
+		if (data_format == "gbi") {
+			tab <- matrix(0, n_inds, length(periods), dimnames=list(ids, periods))
+			for (i in 1:length(periods)) {
+				tab[,i] <- tab[,i] + (colSums(association_data[period==periods[i],,drop=FALSE]) > 0)
+			}
+			return(tab)
+		}
+		} else {
+			stop("Sorry not implemented for multiple locations or summarise sampling periods")
+		}
+	}
 	
 }

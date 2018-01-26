@@ -10,7 +10,7 @@ Converts several different types of data storage into sampling periods for calcu
 \usage{
 get_sampling_periods(association_data, association_times, sampling_period, 
 identities = NULL, location = NULL, within_locations = FALSE, 
-data_format = c("gbi", "groups", "individuals"))
+data_format = c("gbi", "groups", "individuals"), return="SP")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -35,12 +35,15 @@ Flag whether to include location information
   \item{data_format}{
 Format of the input data
 }
+  \item{return}{
+By default ("SP") returns the sampling periods. Anything else will return the occurrence data (see get_network function)
+}
 }
 \details{
 This function will calculate an association matrix for each sampling period. If locations are included, these will be treated independently.
 }
 \value{
-Returns a \code{K x N x N} stack of matrices, where each \code{N x N} slice is an association matrix. Row names and Column names of these slices are given the identity where available. The K slice names are given either the time or time_location for each sampling period.
+Returns a \code{K x N x N} stack of matrices, where each \code{N x N} slice is an association matrix. Row names and Column names of these slices are given the identity where available. The K slice names are given either the time or time_location for each sampling period. Alternatively (return != "SP") the function returns the occurrence of each individual in each sampling period, with individuals as rows and sampling periods as columns.
 }
 \author{
 Damien R. Farine
@@ -58,6 +61,8 @@ individuals <- cbind(individuals,
 
 SPs <- get_sampling_periods(individuals[,c(1,2)],
 	individuals[,3],1,data_format="individuals")
+occurs <- get_sampling_periods(individuals[,c(1,2)],
+	individuals[,3],1,data_format="individuals", return="occ")
 	
 ## define group memberships (these would be read from a file)
 groups <- list(G1=c("C695905","H300253"),
@@ -72,5 +77,7 @@ days <- c(1,1,2,2,3,3)
 
 SPs <- get_sampling_periods(groups,
 	days,1,data_format="groups")
+occurs <- get_sampling_periods(groups,
+	days,1,data_format="groups", return="occ")
 
 }
