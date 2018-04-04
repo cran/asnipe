@@ -94,6 +94,7 @@ gmmevents = function(time,identity,location,global_ids=NULL,verbose=TRUE, splitG
 		
 		B_LOC = output$B_hard_incidence_matrix;
 		gathering_events_LOC = dim(B_LOC)[1]
+
 		
 		B_aux = matrix(0,nrow=gathering_events_LOC,ncol=total_individuals_global)
 		B_aux[,IM_current_DATA$global_indices[match(1:ncol(B_LOC),IM_current_DATA$current_indices)]] = B_LOC
@@ -153,13 +154,13 @@ gmmevents = function(time,identity,location,global_ids=NULL,verbose=TRUE, splitG
 					B_aux <- rbind(B_aux,rep(0,ncol(B_aux)))
 					new.group <- nrow(B_aux)
 				
-					new.group.ids <- table(identity.t[which(event==g)])
+					new.group.ids <- table(identity.t[which(is.na(event))])
 					B_aux[new.group,] <- 0
-					B_aux[new.group,which(IM_current_DATA$global_indices %in% as.numeric(names(new.group.ids)))] <- new.group.ids
+					B_aux[new.group,IM_current_DATA$global_indices[which(IM_current_DATA$current_indices %in% as.numeric(names(new.group.ids)))]] <- new.group.ids
 				
-					old.group.ids <- table(identity.t[which(is.na(event))])
+					old.group.ids <- table(identity.t[which(event==g)])
 					B_aux[old.group,] <- 0
-					B_aux[old.group,which(IM_current_DATA$global_indices %in% as.numeric(names(old.group.ids)))] <- old.group.ids
+					B_aux[old.group,IM_current_DATA$global_indices[which(IM_current_DATA$current_indices %in% as.numeric(names(old.group.ids)))]] <- old.group.ids
 				} else {
 					break;
 				}

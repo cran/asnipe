@@ -1,4 +1,4 @@
-14372a6f7d006724ccc833c043a32d4b *DESCRIPTION
+ce2c911973b71ba93cc025e3931ae906 *DESCRIPTION
 52ef8a726e20fb911b5bb1c0876089b6 *NAMESPACE
 79b3d41d8fd91b5e23e6abcd88556c7c *R/LAR.R
 74e7d19e836dd41d11cef571f8de81ca *R/LRA.R
@@ -6,7 +6,7 @@
 5f01854802816661580bd184581e5c31 *R/get_gbi.R
 0f970fc0c89d0314ab00a2ad12184e98 *R/get_network.R
 39f149b6d780e8906f92c7fcaa1e9534 *R/get_sampling_periods.R
-c0f1bdfb1a45cb06d6a34fd7e68eb185 *R/gmmevents.R
+434de6a31729c689a29774b27d3446dc *R/gmmevents.R
 c11448afc0797131c89f644d15a8dc6d *R/mrqap.custom.null.R
 6f4002f923a166146ee28685c7cf09b4 *R/mrqap.dsp.R
 bab0319cbfe22e782460c9c4cdc1fccd *R/network_permutation.R
@@ -21,7 +21,7 @@ b0938185a31e0bf98afab4a15f6ec597 *data/identified_individuals.RData
 03f47257c31a9edd66ba4aef6ec48643 *data/times.RData
 d70b234cdd0d9a13428e3051039ae82e *man/LAR.Rd
 d81aca43982f975c30f1b98876fafe4d *man/LRA.Rd
-c0759a8473dbac4f68cafbb08051eca4 *man/asnipe-package.Rd
+7f8a10f07fdc4941882b3f3e040f59fd *man/asnipe-package.Rd
 eac313da5de2367ed50c0637c81d2a2d *man/gbi.Rd
 38466f48c22522848865f74045e07cb5 *man/get_associations_points_tw.Rd
 27d4d5a40081bccefc17ff0745d84a5b *man/get_group_by_individual.Rd
