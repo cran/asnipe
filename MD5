@@ -1,4 +1,4 @@
-ce2c911973b71ba93cc025e3931ae906 *DESCRIPTION
+432bbd87b95ea376eb3f5d2466d26d9d *DESCRIPTION
 52ef8a726e20fb911b5bb1c0876089b6 *NAMESPACE
 79b3d41d8fd91b5e23e6abcd88556c7c *R/LAR.R
 74e7d19e836dd41d11cef571f8de81ca *R/LRA.R
@@ -14,14 +14,14 @@ bab0319cbfe22e782460c9c4cdc1fccd *R/network_permutation.R
 8cd47924c7202f1e2ed4da89ead035ea *R/node_permutation.R
 4f3888df0d7c91d2ff0bbbcd6888da6a *R/print.mrqap.dsp.R
 9a2036cbfdd4bb906168d0e980e571b7 *R/test_network_hypothesis.R
-4096ae18164211364d91b0b4f174b096 *R/undefined.R
+ab89753832c1966e09787e76369104c8 *R/undefined.R
 971cb60f256569f58a364c687e7d8d88 *data/group_by_individual.RData
 b0938185a31e0bf98afab4a15f6ec597 *data/identified_individuals.RData
 9c7c9a5548eb53bb797f137226b7339a *data/individuals.RData
 03f47257c31a9edd66ba4aef6ec48643 *data/times.RData
 d70b234cdd0d9a13428e3051039ae82e *man/LAR.Rd
 d81aca43982f975c30f1b98876fafe4d *man/LRA.Rd
-7f8a10f07fdc4941882b3f3e040f59fd *man/asnipe-package.Rd
+f81716d0caa69e1cb50289f553bf9f4e *man/asnipe-package.Rd
 eac313da5de2367ed50c0637c81d2a2d *man/gbi.Rd
 38466f48c22522848865f74045e07cb5 *man/get_associations_points_tw.Rd
 27d4d5a40081bccefc17ff0745d84a5b *man/get_group_by_individual.Rd

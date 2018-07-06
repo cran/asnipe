@@ -1,5 +1,5 @@
 	
-infer_graph_from_datastream_mmVB = function(DATA,verbose=T){
+infer_graph_from_datastream_mmVB = function(DATA,verbose=TRUE){
 	DATA<-as.matrix(DATA)
 	prior_on_K=length(DATA[,2])-1
 	
@@ -447,7 +447,7 @@ get_T_matrix=function(Y,DATA){
 		T[k,1] = DATA[first_obs,1]
 		T[k,2] = DATA[last_obs,1]
 	}
-	sparseMatrix(i=which(t(T)!=0,arr.ind=T)[,1],j=which(t(T)!=0,arr.ind=T)[,2],x=t(T)[t(T!=0)])
+	sparseMatrix(i=which(t(T)!=0,arr.ind=TRUE)[,1],j=which(t(T)!=0,arr.ind=TRUE)[,2],x=t(T)[t(T!=0)])
 	return(T)
 	
 }
