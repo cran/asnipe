@@ -87,6 +87,7 @@ gmmevents = function(time,identity,location,global_ids=NULL,verbose=TRUE, splitG
 		}
 		
 		DATA_LOC = DATA[location_indices,,drop=FALSE]
+		DATA_LOC <- DATA_LOC[order(DATA_LOC[,1]),]
 		
 		igfdresult = infer_graph_from_datastream_mmVB(DATA_LOC,verbose)
 		output=igfdresult[[1]]

@@ -10,8 +10,9 @@ Performs one (or more) random swap on the data and re-calculates network, return
 \usage{
 network_swap(association_data, data_format = "GBI", swaps = 1, 
 	association_index = "SRI", association_matrix = NULL, 
-	identities = NULL, which_identities = NULL, times = NULL, locations = NULL, 
-	which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, 
+	identities = NULL, which_identities = NULL, times = NULL, 
+	occurrences = NULL, locations = NULL, which_locations = NULL, 
+	start_time = NULL, end_time = NULL, classes = NULL, 
 	which_classes = NULL, days = NULL, within_day = FALSE, 
 	within_location = FALSE, within_class = FALSE)
 }
@@ -40,6 +41,9 @@ vector of identities to include in the network (subset of identities)
 }
   \item{times}{
 K vector of times defining the middle of each group/event
+}
+  \item{occurrences}{
+N x S matrix with the occurrence of each individual in each sampling period (see details) containing only 0s and 1s
 }
   \item{locations}{
 K vector of locations defining the location of each group/event

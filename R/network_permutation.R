@@ -1,4 +1,4 @@
-network_permutation <- function(association_data, data_format = "GBI", permutations=1000, returns=1, association_index = "SRI", association_matrix = NULL, identities = NULL, which_identities = NULL, times = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE) {
+network_permutation <- function(association_data, data_format = "GBI", permutations=1000, returns=1, association_index = "SRI", association_matrix = NULL, identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE) {
 	
 	#### CHECK INPUTS
 	if (is.null(association_data)) { stop("No association_data data!") }
@@ -6,6 +6,8 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 	if (length(dim(association_data)) != 3 & data_format=="SP") { stop("Invalid dimensions for association_data") }
 	if ((length(identities) != ncol(association_data) & !is.null(identities)) == TRUE) { stop("Length of identities does not match number of individuals") }
 	if ((length(times) != nrow(association_data) & !is.null(times)) == TRUE) { stop("Length of times does not match number of groups") }
+	if ((length(occurrences[1,]) != nrow(association_data) & !is.null(occurrences)) == TRUE) { stop("Number of occurrence periods does not match number of sampling periods") }
+	if ((length(occurrences[,1]) != ncol(association_data) & !is.null(occurrences)) == TRUE) { stop("Number of individuals in occurrences does not match number of individuals in sampling periods") }
 	if ((length(locations) != nrow(association_data) & !is.null(locations)) == TRUE) { stop("Length of locations does not match number of groups") }
 	if ((length(classes) != ncol(association_data) & !is.null(classes)) == TRUE) { stop("Length of classes does not match number of individuals") }
 	if ((!is.null(which_identities) & is.null(identities)) == TRUE) { stop("Cannot apply which_identities without identities data") }
@@ -138,6 +140,23 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 		return(out)
 	}
 
+	do.SR2_perm.occurrences <- function (i, a, association_index, occurrences) {
+		# how many times 1 seen together with all others
+		x <- apply(a[,i,],2,sum)
+
+		# how many times 1 but not others in a sampling period and vice versa
+		seen <- sweep(occurrences,2,occurrences[i,],"+")
+		yab <- rowSums(seen==2)-x
+		ya_b <- rowSums(seen==1)
+				
+		if (association_index == "SRI") {
+			out <- x / (x + ya_b + yab)
+		} else if (association_index == "HWI") {
+			out <- x / (x + ya_b + 0.5*yab)
+		}
+		return(out)
+	}
+
 	count <- 1
 	##  GET PERMUTATION MATRICES
 	for (n in c(1:permutations)) {
@@ -178,8 +197,13 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 			association_data_perm[first[1],first[2],first[3]] <- 0
 			association_data_perm[first[1],second[2],second[3]] <- 0
 		
-			tmp1 <- do.SR2_perm(first[2],association_data_perm, association_index)
-			tmp2 <- do.SR2_perm(second[2],association_data_perm, association_index)
+			if (is.null(occurrences)) {
+				tmp1 <- do.SR2_perm(first[2],association_data_perm, association_index)
+				tmp2 <- do.SR2_perm(second[2],association_data_perm, association_index)
+			} else {
+				tmp1 <- do.SR2_perm.occurrences(first[2],association_data_perm, association_index, occurrences)
+				tmp2 <- do.SR2_perm.occurrences(second[2],association_data_perm, association_index, occurrences)
+			}
 		}
 
 		fradj_sorted2[,first[2]] <- tmp1
