@@ -13,7 +13,8 @@ network_permutation(association_data, data_format = "GBI", permutations = 1000,
 	identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL,
 	locations = NULL,  which_locations = NULL, start_time = NULL, 
 	end_time = NULL, classes = NULL, which_classes = NULL, 
-	days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE)
+	days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE,
+	enter_time = NULL, exit_time = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -77,11 +78,20 @@ if \code{TRUE} then permutations will be done within the given locations
   \item{within_class}{
 if \code{TRUE} then permutations will be done within the given classes
 }
+  \item{enter_time}{
+N vector of times when each individual entered the population
+}
+  \item{exit_time}{
+N vector of times when each individual departed the population 
+}
+
 }
 \details{
 Performs permutations on the group by individual matrix as given by Whitehead (2008).  In order to save computing, only the recently swapped individuals are recalculated, hence why the association matrix of the original data can be provided or is recalculated.
 
 This implementation allows permutations (swaps) to be restricted to within any of three classes.  Though each class is labelled, the function is flexible.  Hence, days can represent any time period (months, hours, etc.).
+
+See get_network function for additional details on each field.
 }
 \value{
 Returns a \code{p x N x N} stack of matrices with the dyadic association rates of each pair of individuals after each swap or after a number of swaps, where p = ceiling(permutations/returns)

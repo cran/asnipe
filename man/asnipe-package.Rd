@@ -12,13 +12,13 @@ Provides functions for infering associations, building social networks, performi
 \tabular{ll}{
 Package: \tab asnipe\cr
 Type: \tab Package\cr
-Version: \tab 1.1.11\cr
-Date: \tab 2018-11-22\cr
+Version: \tab 1.1.12\cr
+Date: \tab 2019-08-19\cr
 License: \tab GPL-2 \cr
 }
 }
 \author{
 Written by Damien R. Farine
 
-Maintainer: Damien R. Farine <dfarine@orn.mpg.de>
+Maintainer: Damien R. Farine <dfarine@ab.mpg.de>
 }

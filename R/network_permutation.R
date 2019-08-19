@@ -1,4 +1,4 @@
-network_permutation <- function(association_data, data_format = "GBI", permutations=1000, returns=1, association_index = "SRI", association_matrix = NULL, identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE) {
+network_permutation <- function(association_data, data_format = "GBI", permutations=1000, returns=1, association_index = "SRI", association_matrix = NULL, identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE, enter_time = NULL, exit_time = NULL) {
 	
 	#### CHECK INPUTS
 	if (is.null(association_data)) { stop("No association_data data!") }
@@ -19,6 +19,8 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 	if (within_day & is.null(days)) { stop("Cannot constrict within days if days are not supplied") }
 	if (within_location & is.null(locations)) { stop("Cannot constrict within location if locations are not supplied") }
 	if (within_class & is.null(classes)) { stop("Cannot constrict within class if classes are not supplied") }
+	if ((!is.null(enter_time) & is.null(times)) == TRUE) { stop("Cannot control for overlapping time without observation times") }
+	if ((!is.null(exit_time) & is.null(times)) == TRUE) { stop("Cannot control for overlapping time without observation times") }
 	if (!is.null(locations)) { locations <- as.matrix(locations) } # Fixes bug with data frames
 
 	#### SUBSET THE DATA
@@ -104,8 +106,13 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 		return(out)
 	}
 
-	do.SR_perm.times <- function(GroupBy,input,times) {
+	do.SR_perm.times <- function(GroupBy,input,times,present) {
 		tmp <- input[ ,GroupBy] + input
+		if (!is.null(enter_time) | !is.null(exit_time)) {
+			tmp2 <- present[ ,GroupBy] + present
+			tmp[tmp2<2] <- 0
+		}
+
 		x <- colSums(tmp==2)
 		yab <- apply(tmp,2,function(x) { sum(table(times[x==1])==2) })
 		y <- colSums(tmp==1)-(2*yab)
@@ -157,6 +164,25 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 		return(out)
 	}
 
+	if (!is.null(enter_time) | !is.null(exit_time)) {
+		present <- matrix(1,nrow(association_data),ncol(association_data))
+	} else {
+		present <- NA
+	}
+
+	# Overlapping times only
+	if (!is.null(enter_time)) {
+		for (i in 1:ncol(present)) {
+			present[which(times < enter_time[i]),i] <- 0
+		}
+	}
+	if (!is.null(exit_time)) {
+		for (i in 1:ncol(present)) {
+			present[which(times > exit_time[i]),i] <- 0
+		}
+	}
+
+
 	count <- 1
 	##  GET PERMUTATION MATRICES
 	for (n in c(1:permutations)) {
@@ -187,8 +213,8 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 				tmp1 <- do.SR_perm(first[2],association_data_perm)
 				tmp2 <- do.SR_perm(second[2],association_data_perm)
 			} else {
-				tmp1 <- do.SR_perm.times(first[2],association_data_perm,times)
-				tmp2 <- do.SR_perm.times(second[2],association_data_perm,times)
+				tmp1 <- do.SR_perm.times(first[2],association_data_perm,times,present)
+				tmp2 <- do.SR_perm.times(second[2],association_data_perm,times,present)
 			}
 		}
 		if (data_format=="SP") {

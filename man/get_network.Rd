@@ -12,7 +12,8 @@ get_network(association_data, data_format = "GBI",
 	association_index = "SRI", identities = NULL, 
 	which_identities = NULL, times = NULL, occurrences = NULL,
 	locations = NULL, which_locations = NULL, start_time = NULL, 
-	end_time = NULL, classes = NULL, which_classes = NULL)
+	end_time = NULL, classes = NULL, which_classes = NULL,
+	enter_time = NULL, exit_time = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -55,11 +56,19 @@ N vector of types or class of each individual (column) in the group by individua
   \item{which_classes}{
 vector of class(es)/type(s) to include in the network (subset of classes)
 }
+  \item{enter_time}{
+N vector of times when each individual entered the population
+}
+  \item{exit_time}{
+N vector of times when each individual departed the population 
+}
 }
 \details{
 Provides the ability to generate networks from one group by individual matrix and subsetting within the function.  This is particularly useful for generating several networks with different characteristics from the same group by individual matrix (for example networks from a given location or set of locations, or of a particular sex).
 
 Including occurrence data is recommended when using sampling periods (not required for GBI data). If an individual is only observed alone in a sampling period, then it will not be included in the sampling period matrices (as these record only associations or interactions, not presence). Thus, a matrix containing N (for number of individuals) rows and S (for number of sampling periods) is required. See the get_sampling_periods function for help generating this matrix.
+
+In some situations it is useful to calculate the network based only on the period in which each dyad overlapped within the population. In such cases, the entry_time and/or the exit_time variables can be given. These must given in the same format as the times variable, and all need to be in a format capable of doing time or date comparisons using > and < operators. The easiest is YYYYMMDD, whereas MMDDYYYY or DDMMYYYY will not work properly.
 
 }
 \value{

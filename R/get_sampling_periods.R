@@ -2,7 +2,7 @@ get_sampling_periods <- function(association_data, association_times, sampling_p
 
 
 	if (is.numeric(association_times)) {
-		period <- round(association_times/sampling_period)
+		period <- ceiling(association_times/sampling_period)
 	} else {
 		if (sampling_period == 1) {
 			period <- as.character(association_times)

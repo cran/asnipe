@@ -1,4 +1,4 @@
-get_network <- function(association_data, data_format = "GBI", association_index = "SRI", identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL) {
+get_network <- function(association_data, data_format = "GBI", association_index = "SRI", identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL, enter_time = NULL, exit_time = NULL) {
 
 	#### CHECK INPUTS
 	if (is.null(association_data)) { stop("No association_data data!") }
@@ -15,6 +15,9 @@ get_network <- function(association_data, data_format = "GBI", association_index
 	if ((!is.null(start_time) & is.null(times)) == TRUE) { stop("Cannot apply start_time without times data") }
 	if ((!is.null(end_time) & is.null(times)) == TRUE) { stop("Cannot apply end_time without times data") }
 	if ((!is.null(which_classes) & is.null(classes)) == TRUE) { stop("Cannot apply which_class without classes data") }
+	if ((!is.null(enter_time) & is.null(times)) == TRUE) { stop("Cannot control for overlapping time without observation times") }
+	if ((!is.null(exit_time) & is.null(times)) == TRUE) { stop("Cannot control for overlapping time without observation times") }
+	if (!is.null(colnames(association_data)) & !all(colnames(association_data) == identities)) { stop("Identities is not in the same order as columns in association_data") }
 	if (!any(association_index %in% c("SRI","HWI"))) { stop("Unknown association_index") }
 
 	if (data_format=="GBI") {
@@ -58,10 +61,12 @@ get_network <- function(association_data, data_format = "GBI", association_index
 		if (data_format=="SP") association_data <- association_data[,which(classes %in% which_classes),which(classes %in% which_classes)]
 		identities <- identities[which(classes %in% which_classes)]
 	}
+
 	
 	#### GENERATE NETWORK
 	### Calculate Network
-	do.SR <- function(GroupBy,input,association_index){
+	do.SR <- function(GroupBy,input,association_index,present){
+
 		jumps <- c(seq(0,ncol(input),50))
 		if (max(jumps) < ncol(input)) {
 			jumps <- c(jumps,ncol(input))
@@ -88,7 +93,7 @@ get_network <- function(association_data, data_format = "GBI", association_index
 		out
 	}
 
-	do.SR.time <- function(GroupBy,input,association_index, times){
+	do.SR.time <- function(GroupBy,input,association_index, times, present){
 		jumps <- c(seq(0,ncol(input),50))
 		if (max(jumps) < ncol(input)) {
 			jumps <- c(jumps,ncol(input))
@@ -96,9 +101,19 @@ get_network <- function(association_data, data_format = "GBI", association_index
 		out <- matrix(nrow=0,ncol=1)
 		for (i in 1:(length(jumps)-1)) {
 			tmp <- input[ ,GroupBy] + input[,(jumps[i]+1):jumps[i+1],drop=FALSE]
-			x <- colSums(tmp==2)
-			yab <- apply(tmp,2,function(x) { sum(table(times[x==1])==2) })
-			y <- colSums(tmp==1)-(2*yab)
+			if (!is.null(enter_time) | !is.null(exit_time)) {
+				tmp2 <- present[ ,GroupBy] + present[,(jumps[i]+1):jumps[i+1],drop=FALSE]
+				tmp[which(tmp2<2,arr.ind=T)] <- 0
+			}
+			if (length(tmp) > nrow(input)) {
+				x <- colSums(tmp==2)
+				yab <- apply(tmp,2,function(x) { sum(table(times[x==1])==2) })
+				y <- colSums(tmp==1)-(2*yab)
+			} else {
+				x <- sum(tmp==2)
+				yab <- sum(table(times[tmp==1])==2)
+				y <- sum(tmp==1)-(2*yab)
+			}
 			if (association_index == "SRI") {
 				out <- c(out, x / (x + y + yab))
 			} else if (association_index == "HWI") {
@@ -140,17 +155,7 @@ get_network <- function(association_data, data_format = "GBI", association_index
 		seen <- sweep(occurrences,2,occurrences[i,],"+")
 		yab <- rowSums(seen==2)-x
 		ya_b <- rowSums(seen==1)
-		
-		#n <- apply(a,1,rowSums)
-		#n[n>0] <- 1
-		#seen <- t(apply(n,1,function(x) x-n[i,]))
-		#ya <- rowSums(seen<0)
-		#yb <- rowSums(seen>0)
-
-		# how many times 1 and others seen but not together
-		#seen <- t(apply(n,1,function(x) x+n[i,]))
-		#yab <- rowSums(seen>1) - x
-		
+				
 		if (association_index == "SRI") {
 			out <- x / (x + ya_b + yab)
 		} else if (association_index == "HWI") {
@@ -162,9 +167,27 @@ get_network <- function(association_data, data_format = "GBI", association_index
 	
 	cat(paste("Generating ", ncol(association_data), " x ", ncol(association_data), " matrix\n"))
 
+	if (!is.null(enter_time) | !is.null(exit_time)) {
+		present <- matrix(1,nrow(association_data),ncol(association_data))
+	} else {
+		present <- NA
+	}
+
+	# Overlapping times only
+	if (!is.null(enter_time)) {
+		for (i in 1:ncol(present)) {
+			present[which(times < enter_time[i]),i] <- 0
+		}
+	}
+	if (!is.null(exit_time)) {
+		for (i in 1:ncol(present)) {
+			present[which(times > exit_time[i]),i] <- 0
+		}
+	}
+
 	if (data_format=="GBI" & is.null(times)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR,input=association_data, association_index))
 
-	if (data_format=="GBI" & !is.null(times)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR.time,input=association_data, association_index, times))
+	if (data_format=="GBI" & !is.null(times)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR.time,input=association_data, association_index, times, present))
 	
 	if (data_format=="SP" & is.null(occurrences)) fradj_sorted <- do.call("rbind",lapply(seq(1,ncol(association_data),1),FUN=do.SR2,a=association_data, association_index))
 
