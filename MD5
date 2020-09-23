@@ -1,4 +1,4 @@
-b8696542212cef1fad4a6aef7ec15917 *DESCRIPTION
+46f5173ba30cd724c120434f0c9ac35d *DESCRIPTION
 52ef8a726e20fb911b5bb1c0876089b6 *NAMESPACE
 79b3d41d8fd91b5e23e6abcd88556c7c *R/LAR.R
 74e7d19e836dd41d11cef571f8de81ca *R/LRA.R
@@ -9,8 +9,8 @@ b9d2c4c8336a82d85bfabbf56b21c5e7 *R/get_sampling_periods.R
 243fa5a4d8bffb01301b0a5fd6c6c5a6 *R/gmmevents.R
 c11448afc0797131c89f644d15a8dc6d *R/mrqap.custom.null.R
 6f4002f923a166146ee28685c7cf09b4 *R/mrqap.dsp.R
-6c2003ac1e317617dcf5f587c3c88ec4 *R/network_permutation.R
-0aa9abcbf6c6eadb726302af26c214e4 *R/network_swap.R
+b5c1bbff4fd907fd3e6a9f026b4f8e85 *R/network_permutation.R
+b38d7e48195b53cce3aa99d84f750f7e *R/network_swap.R
 8cd47924c7202f1e2ed4da89ead035ea *R/node_permutation.R
 4f3888df0d7c91d2ff0bbbcd6888da6a *R/print.mrqap.dsp.R
 9a2036cbfdd4bb906168d0e980e571b7 *R/test_network_hypothesis.R
@@ -19,9 +19,10 @@ ab89753832c1966e09787e76369104c8 *R/undefined.R
 b0938185a31e0bf98afab4a15f6ec597 *data/identified_individuals.RData
 9c7c9a5548eb53bb797f137226b7339a *data/individuals.RData
 03f47257c31a9edd66ba4aef6ec48643 *data/times.RData
+21ddf0dc8155e56e11c679c4fe6a3112 *inst/CITATION
 d70b234cdd0d9a13428e3051039ae82e *man/LAR.Rd
 d81aca43982f975c30f1b98876fafe4d *man/LRA.Rd
-963400b587be6a2720cb7238cebc3242 *man/asnipe-package.Rd
+96af56e4b9e5fd8a0b9b767d1a738dbe *man/asnipe-package.Rd
 eac313da5de2367ed50c0637c81d2a2d *man/gbi.Rd
 38466f48c22522848865f74045e07cb5 *man/get_associations_points_tw.Rd
 27d4d5a40081bccefc17ff0745d84a5b *man/get_group_by_individual.Rd
@@ -30,9 +31,9 @@ c77f07375efe447e8d715f34e392e1fb *man/get_sampling_periods.Rd
 d1a97fa6dd430971424a6beb0e302f98 *man/gmmevents.Rd
 45d0027bfe7373d54484a20dbdb21c74 *man/identified_individuals.Rd
 ba05f80a4bf3eb0c9e9b97822afc9dd5 *man/inds.Rd
-a73177672dc5f9d31d8e525f868b9551 *man/mrqap.custom.null.Rd
-7b93c439029636ae7c91d66b2de5cb98 *man/mrqap.dsp.Rd
-d788e8e082142068542dc01f03ad3c1c *man/network_permutation.Rd
-939a119616c79642805e7d51117bb312 *man/network_swap.Rd
+2863672fdd4df7638c4dedaa9cd105e9 *man/mrqap.custom.null.Rd
+6662fa18592bd286d8deefb1546902f8 *man/mrqap.dsp.Rd
+d25f077efc77e542947fdb0a3006ff46 *man/network_permutation.Rd
+11664948fa045e677d337f17efc0cb0a *man/network_swap.Rd
 f7baf32e8150b484a4a05712a317d2c5 *man/print.mrqap.dsp.Rd
 12b576c98a904a9d0aecbb959ad903cb *man/times.Rd

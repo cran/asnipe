@@ -1,0 +1,12 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Article",
+         title = "Animal Social Network Inference and Permutations for Ecologists in R using {asnipe}",
+         author = c(person("Damien", "Farine")),
+         year = "2013",
+         journal = "Methods in Ecology and Evolution",
+	 volume = "4",
+	 number = "12",
+	 pages = "1187--1194",
+         url = "https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12121")

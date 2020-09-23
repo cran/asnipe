@@ -68,8 +68,8 @@ sex <- array(0,dim(network))
 
 # Fill each matrix with 1 (same) or 0 (different)
 for (i in 1:nrow(network)) {
-	species[,-i] <- as.numeric(inds$SPECIES[1] == inds$SPECIES[-i])
-	sex[,-i] <- as.numeric(inds$SEX[1] == inds$SEX[-i])
+	species[i,-i] <- as.numeric(inds$SPECIES[i] == inds$SPECIES[-i])
+	sex[i,-i] <- as.numeric(inds$SEX[i] == inds$SEX[-i])
 }
 
 # Perform network randomisation

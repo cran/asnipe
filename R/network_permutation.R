@@ -1,4 +1,4 @@
-network_permutation <- function(association_data, data_format = "GBI", permutations=1000, returns=1, association_index = "SRI", association_matrix = NULL, identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE, enter_time = NULL, exit_time = NULL) {
+network_permutation <- function(association_data, data_format = "GBI", permutations=1000, returns=1, association_index = "SRI", association_matrix = NULL, identities = NULL, which_identities = NULL, times = NULL, occurrences = NULL, locations = NULL, which_locations = NULL, start_time = NULL, end_time = NULL, classes = NULL, which_classes = NULL, days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE, enter_time = NULL, exit_time = NULL, symmetric=TRUE, trialSwap=TRUE) {
 	
 	#### CHECK INPUTS
 	if (is.null(association_data)) { stop("No association_data data!") }
@@ -186,24 +186,36 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 	count <- 1
 	##  GET PERMUTATION MATRICES
 	for (n in c(1:permutations)) {
+		success <- FALSE
 		repeat {
 			a <- which(association_data_perm>0,arr.ind=TRUE)
 			s <- sample(1:nrow(a),1)
 			first <- a[s,]
 			if (data_format=="GBI") {
-				a <- a[which(locations[as.numeric(a[,1])] == locations[as.numeric(a[s,1])] & days[as.numeric(a[,1])] == days[as.numeric(a[s,1])] & classes[as.numeric(a[,2])] == classes[as.numeric(a[s,2])]),,drop=FALSE]
+				a <- a[which(!(a[,1] %in% first[1]) & !(a[,2] %in% first[2])),,drop=FALSE]
+				if (nrow(a) > 0) {
+				a <- a[which(locations[as.numeric(a[,1])] == locations[as.numeric(first[1])] & days[as.numeric(a[,1])] == days[as.numeric(first[1])] & classes[as.numeric(a[,2])] == classes[as.numeric(first[2])]),,drop=FALSE]
+				if (nrow(a) > 0) {
 				second <- a[sample(1:nrow(a),1),]
-				if (first[1]!=second[1]&first[2]!=second[2]&(sum(association_data_perm[first[1],first[2]]) > 0 & sum(association_data_perm[second[1],second[2]]) > 0) & (sum(association_data_perm[second[1],first[2]]) == 0 & sum(association_data_perm[first[1],second[2]]) == 0)) { break; }
+				if (first[1]!=second[1]&first[2]!=second[2]&(sum(association_data_perm[first[1],first[2]]) > 0 & sum(association_data_perm[second[1],second[2]]) > 0) & (sum(association_data_perm[second[1],first[2]]) == 0 & sum(association_data_perm[first[1],second[2]]) == 0)) { success<-TRUE; break; }
+				}}
+				if (trialSwap) { break; }
 			}
 			if (data_format=="SP") {
-				a <- a[which(a[,1] == a[s,1] & classes[as.numeric(a[,2])] == classes[as.numeric(a[s,2])] & classes[as.numeric(a[,3])] == classes[as.numeric(a[s,3])]),,drop=FALSE]
-				second <- a[sample(1:nrow(a),1),]
-				if (first[2]!=second[2]&first[3]!=second[3]&(sum(association_data_perm[first[1],first[2],first[3]]) > 0 & sum(association_data_perm[second[1],second[2],second[3]]) > 0) & (sum(association_data_perm[second[1],second[2],first[3]]) == 0 & sum(association_data_perm[first[1],first[2],second[3]]) == 0)) { break; }
+				a <- a[which(a[,1] == first[1] & !(a[,2] %in% first[c(2,3)]) & !(a[,3] %in% first[c(2,3)])),,drop=FALSE]
+				if (nrow(a) > 0) {
+					a <- a[which(classes[as.numeric(a[,2])] == classes[as.numeric(first[2])] & classes[as.numeric(a[,3])] == classes[as.numeric(first[3])]),,drop=FALSE]
+					if (nrow(a) > 0) {
+						second <- a[sample(1:nrow(a),1),]
+						if (first[2]!=second[2]&first[3]!=second[3]&first[3]!=second[2]&first[2]!=second[3] & (sum(association_data_perm[first[1],first[2],first[3]]) > 0 & sum(association_data_perm[second[1],second[2],second[3]]) > 0) & (sum(association_data_perm[second[1],second[2],first[3]]) == 0 & sum(association_data_perm[first[1],first[2],second[3]]) == 0)) { success<-TRUE; break; }
+					}
+				}
+				if (trialSwap) { break; }
 			}
 				
 		}
 		
-		if (data_format=="GBI") {
+		if (data_format=="GBI" & success) {
 			association_data_perm[second[1],first[2]] <- association_data_perm[first[1],first[2]]
 			association_data_perm[first[1],second[2]] <- association_data_perm[second[1],second[2]]
 			association_data_perm[first[1],first[2]] <- 0
@@ -217,11 +229,19 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 				tmp2 <- do.SR_perm.times(second[2],association_data_perm,times,present)
 			}
 		}
-		if (data_format=="SP") {
+		if (data_format=="SP" & success) {
 			association_data_perm[first[1],second[2],first[3]] <- association_data_perm[first[1],first[2],first[3]]
 			association_data_perm[first[1],first[2],second[3]] <- association_data_perm[first[1],second[2],second[3]]
+			if (symmetric) {
+				association_data_perm[first[1],first[3],second[2]] <- association_data_perm[first[1],first[3],first[2]]
+				association_data_perm[first[1],second[3],first[2]] <- association_data_perm[first[1],second[3],second[2]]
+			}
 			association_data_perm[first[1],first[2],first[3]] <- 0
 			association_data_perm[first[1],second[2],second[3]] <- 0
+			if (symmetric) {
+				association_data_perm[first[1],first[3],first[2]] <- 0
+				association_data_perm[first[1],second[3],second[2]] <- 0
+			}
 		
 			if (is.null(occurrences)) {
 				tmp1 <- do.SR2_perm(first[2],association_data_perm, association_index)
@@ -232,12 +252,14 @@ network_permutation <- function(association_data, data_format = "GBI", permutati
 			}
 		}
 
-		fradj_sorted2[,first[2]] <- tmp1
-		fradj_sorted2[first[2],] <- tmp1
-		fradj_sorted2[,second[2]] <- tmp2
-		fradj_sorted2[second[2],] <- tmp2
-		
-		diag(fradj_sorted2) <- 0
+		if (success) {
+			fradj_sorted2[,first[2]] <- tmp1
+			fradj_sorted2[first[2],] <- tmp1
+			fradj_sorted2[,second[2]] <- tmp2
+			fradj_sorted2[second[2],] <- tmp2
+			
+			diag(fradj_sorted2) <- 0
+		}
 		
 		if ((n %% returns) == 0) {
 			fradj_sorted_perm[count,,] <- fradj_sorted2

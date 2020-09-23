@@ -14,7 +14,7 @@ network_permutation(association_data, data_format = "GBI", permutations = 1000,
 	locations = NULL,  which_locations = NULL, start_time = NULL, 
 	end_time = NULL, classes = NULL, which_classes = NULL, 
 	days = NULL, within_day = FALSE, within_location = FALSE, within_class = FALSE,
-	enter_time = NULL, exit_time = NULL)
+	enter_time = NULL, exit_time = NULL, symmetric=TRUE, trialSwap=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -84,12 +84,20 @@ N vector of times when each individual entered the population
   \item{exit_time}{
 N vector of times when each individual departed the population 
 }
+  \item{symmetric}{
+Boolean to ensure that permutations maintain symmetry within sampling periods if using \code{data_format="SP"}
+}
+  \item{trialSwap}{
+Boolean to include trial swaps (if true, then every attempted permutation is returned)
+}
 
 }
 \details{
 Performs permutations on the group by individual matrix as given by Whitehead (2008).  In order to save computing, only the recently swapped individuals are recalculated, hence why the association matrix of the original data can be provided or is recalculated.
 
 This implementation allows permutations (swaps) to be restricted to within any of three classes.  Though each class is labelled, the function is flexible.  Hence, days can represent any time period (months, hours, etc.).
+
+Trial swaps are implemented following Miklos and Podani (2004). Every permutation, a candidate swap is selected. If the selected portions of the data satisfy the baseline rules (e.g. the checkerboard pattern), then either the selection is attempted again \code{trialSwap = FALSE} or not \code{trialSwap = TRUE}. This should be set to TRUE, but the option for FALSE is provided for legacy analyses.
 
 See get_network function for additional details on each field.
 }

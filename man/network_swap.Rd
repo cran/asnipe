@@ -14,7 +14,8 @@ network_swap(association_data, data_format = "GBI", swaps = 1,
 	occurrences = NULL, locations = NULL, which_locations = NULL, 
 	start_time = NULL, end_time = NULL, classes = NULL, 
 	which_classes = NULL, days = NULL, within_day = FALSE, 
-	within_location = FALSE, within_class = FALSE)
+	within_location = FALSE, within_class = FALSE, symmetric=TRUE,
+	trialSwap=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -75,11 +76,21 @@ if \code{TRUE} then permutations will be done within the given locations
   \item{within_class}{
 if \code{TRUE} then permutations will be done within the given classes
 }
+  \item{symmetric}{
+Boolean to ensure that permutations maintain symmetry within sampling periods if using \code{data_format="SP"}
+}
+  \item{trialSwap}{
+Boolean to include trial swaps (if TRUE, then every attempted permutation is returned)
+}
+
 }
 \details{
 Performs one or more permutation swaps on the group by individual matrix as given by Whitehead (2008).  In order to save on memory use, this function computers the number of swaps and returns the association matrix and the data stream resulting from these, thus not needing to create a large stack of networks to store each permutation. This can then be implemented in a loop as shown in the example below. Note that this method is quite a bit slower than the network_permutation function.
 
 This implementation allows permutations (swaps) to be restricted to within any of three classes.  Though each class is labelled, the function is flexible.  Hence, days can represent any time period (months, hours, etc.). However, unlike the network_permutation, the subsetting of the data must be done outside of this function (for reasons that might be obvious) - see the example below.
+
+Trial swaps are implemented following Miklos and Podani (2004). Every permutation, a candidate swap is selected. If the selected portions of the data satisfy the baseline rules (e.g. the checkerboard pattern), then either the selection is attempted again \code{trialSwap = FALSE} or not \code{trialSwap = TRUE}. This should be set to TRUE, but the option for FALSE is provided for legacy analyses.
+
 }
 \value{
 Returns a list containing an \code{N x N} matrix with the dyadic association rates of each pair of individuals after performing the swaps, and the \code{N x N} data stream post-swap, as two list elements.
