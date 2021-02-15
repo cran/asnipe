@@ -113,6 +113,8 @@ Damien R. Farine
 
 \examples{
 
+### USING TIMES, ETC.
+
 data("group_by_individual")
 data("times")
 
@@ -162,5 +164,59 @@ hist(colMeans(deg_weighted_perm2),breaks=100,
 	sum(mean(deg_weighted[,2]) < colMeans(deg_weighted_perm2))/ncol(deg_weighted_perm2)), 
 	xlab="Weighted degree", ylab="Probability")
 abline(v=mean(deg_weighted[,2]), col='red')
+
+
+
+#### DOUBLE PERMUTATION EXAMPLE (see Farine & Carter 2021)
+
+## Load data
+data("group_by_individual")
+data("times")
+
+# subset GBI (to reduce run time of the example)
+gbi <- gbi[,1:40]
+
+# Specify metric
+metric <- "DEGREE"
+
+# calculate observed network
+network <- get_network(gbi, data_format="GBI", 
+	association_index="SRI", times=times)
+
+# Calculate observed metric (degree)
+degrees <- rowSums(network)
+
+# Do randomisation (as above, permutations should be >=1000)
+networks.perm <- network_permutation(gbi, data_format="GBI",
+	association_matrix=network, times=times, permutations=10)
+
+# Now calculate the same metric on all the random networks
+degrees.rand <- apply(networks.perm,1,function(x) { rowSums(x)})
+
+# Now substract each individual's median from the observed
+degree.controlled <- degrees - apply(degrees.rand,1,median)
+
+#### Now use degree.controlled for any later test. For example, to related against a trait:
+
+# Make a trait
+trait <- rnorm(length(degree.controlled))
+
+# get the coefficient of this:
+coef <- summary(lm(degree.controlled~trait))$coefficients[2,3]
+
+# Compare this to a node permutation 
+# (here just randomising the trait values)
+# note this should be done >= 1000 times
+n.node.perm <- 10
+coefs.random <- rep(NA, n.node.perm)
+
+for (i in 1:n.node.perm) {
+	trait.random <- sample(trait)
+	coefs.random[i] <- summary(lm(degree.controlled~trait.random))$coefficients[2,3]
+}
+
+# calculate P value (note this is only one sided)
+P <- sum(coef <= coefs.random)/n.node.perm
+
 
 }

@@ -1,11 +1,11 @@
-46f5173ba30cd724c120434f0c9ac35d *DESCRIPTION
+eeadfde5a53ca3c31af4d5426009db89 *DESCRIPTION
 52ef8a726e20fb911b5bb1c0876089b6 *NAMESPACE
 79b3d41d8fd91b5e23e6abcd88556c7c *R/LAR.R
 74e7d19e836dd41d11cef571f8de81ca *R/LRA.R
-4b2e3c84604b9b311c26590e9dcee7af *R/get_associations_points_tw.R
+ed9a624abbc1f2d358a919be4584a451 *R/get_associations_points_tw.R
 5f01854802816661580bd184581e5c31 *R/get_gbi.R
 2deb34ff97c1640c6dc7f9a008ca9e19 *R/get_network.R
-b9d2c4c8336a82d85bfabbf56b21c5e7 *R/get_sampling_periods.R
+fa61b3d55c6d9eb2bbd2b8210ec7d790 *R/get_sampling_periods.R
 243fa5a4d8bffb01301b0a5fd6c6c5a6 *R/gmmevents.R
 c11448afc0797131c89f644d15a8dc6d *R/mrqap.custom.null.R
 6f4002f923a166146ee28685c7cf09b4 *R/mrqap.dsp.R
@@ -22,9 +22,9 @@ b0938185a31e0bf98afab4a15f6ec597 *data/identified_individuals.RData
 21ddf0dc8155e56e11c679c4fe6a3112 *inst/CITATION
 d70b234cdd0d9a13428e3051039ae82e *man/LAR.Rd
 d81aca43982f975c30f1b98876fafe4d *man/LRA.Rd
-96af56e4b9e5fd8a0b9b767d1a738dbe *man/asnipe-package.Rd
+74308df2378903d202a470d1335f6ce5 *man/asnipe-package.Rd
 eac313da5de2367ed50c0637c81d2a2d *man/gbi.Rd
-38466f48c22522848865f74045e07cb5 *man/get_associations_points_tw.Rd
+ba760310b27f2301b0f3fe0fe73b671c *man/get_associations_points_tw.Rd
 27d4d5a40081bccefc17ff0745d84a5b *man/get_group_by_individual.Rd
 3f8e9b1b8c7e2a0b4219df695f450939 *man/get_network.Rd
 c77f07375efe447e8d715f34e392e1fb *man/get_sampling_periods.Rd
@@ -33,7 +33,7 @@ d1a97fa6dd430971424a6beb0e302f98 *man/gmmevents.Rd
 ba05f80a4bf3eb0c9e9b97822afc9dd5 *man/inds.Rd
 2863672fdd4df7638c4dedaa9cd105e9 *man/mrqap.custom.null.Rd
 6662fa18592bd286d8deefb1546902f8 *man/mrqap.dsp.Rd
-d25f077efc77e542947fdb0a3006ff46 *man/network_permutation.Rd
+936abffb3540d2deb0773fcb9ccdc02a *man/network_permutation.Rd
 11664948fa045e677d337f17efc0cb0a *man/network_swap.Rd
 f7baf32e8150b484a4a05712a317d2c5 *man/print.mrqap.dsp.Rd
 12b576c98a904a9d0aecbb959ad903cb *man/times.Rd

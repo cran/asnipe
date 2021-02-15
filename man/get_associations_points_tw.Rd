@@ -2,7 +2,7 @@
 \alias{get_associations_points_tw}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Calculate Group Membership using Time Window
+Calculate Group Membership using Time Window (please read warnings before using this method)
 }
 \description{
 A time window approach to calculate group co-memberships.
@@ -34,14 +34,15 @@ Input data must be of the following form:  Date is an integer for day (usually s
 \value{
 Returns a list with three objects:
 1. group by individual matrix (K rows by N columns)
-2. an array of times for each group
-3. an array of locations for each group
+2. an vector of times for each group
+3. a vector of dates for each group
+4. a vector of locations for each group
 }
 \author{
 Damien R. Farine
 }
 \section{Warning }{
-This method biases associations of dyads occuring in large groups.  One way to circumvent this is by including only groups centered around the focal individual when calculating associations.  However, none of the functions in this package are implement this way.
+This method biases associations of dyads occuring in large groups because it creates one row in the association matrix for each detection of an individual. For this reason, this function should not be used (see also Psorakis et al. 2015 Behavioural Ecology & Sociobiology). One way to circumvent this is by including only groups centered around the focal individual when calculating associations. However, none of the functions in this package are implement this way.
 }
 
 
@@ -56,7 +57,8 @@ group_by_individual <- get_associations_points_tw(identified_individuals, time_w
 
 ## split the resulting list
 times <- group_by_individual[[2]]
-locations <- group_by_individual[[3]]
+dates <- group_by_individual[[3]]
+locations <- group_by_individual[[4]]
 group_by_individual <- group_by_individual[[1]]
 
 }

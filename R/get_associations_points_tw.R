@@ -20,8 +20,10 @@ function(point_data, time_window = 180, which_days = NULL, which_locations = NUL
 
 	####  Build Network
 	# Look ahead to see if this is a stream from this individual, if it is, remove row from point_data and from fradj (reduces dependency of detections with centrality measures)
-	del_rows <- point_data$ID[-nrow(point_data)] == point_data$ID[-1] & point_data$Time[-1] - point_data$Time[-nrow(point_data)] < (180/2)
-	point_data <- point_data[-del_rows,]
+	del_rows <- point_data$ID[-nrow(point_data)] == point_data$ID[-1] & point_data$Time[-1] - point_data$Time[-nrow(point_data)] < (time_window/2)
+	if (length(del_rows) > 0) {
+		point_data <- point_data[-del_rows,]
+	}
 	
 	#fradj <- matrix(0,nrow=nrow(point_data),ncol=length(unique(point_data$ID)))
 	#colnames(fradj) <- unique(point_data$ID)
@@ -44,5 +46,5 @@ function(point_data, time_window = 180, which_days = NULL, which_locations = NUL
 	
 	rownames(fradj) <- point_data$ID
 	
-	list(fradj,point_data$Time,point_data$Date)
+	return(list(fradj,point_data$Time,point_data$Date,point_data$Location))
 }
