@@ -80,9 +80,9 @@ get_sampling_periods <- function(association_data, association_times, sampling_p
 		if (sampling_period == 1 & within_locations == FALSE) {
 		if (data_format == "individuals") {
 			tab=table(factor(association_data[, 1],levels=ids),sampling_period=association_times)
-			tab <- tab[,as.character(periods)] ### UPDATE NOT IMPLEMENTED IN CRAN 2021-02-12
-			tab[tab>0] <- 1 ### UPDATE NOT IMPLEMENTED IN CRAN 2021-02-12
-			return(tab) ### UPDATE NOT IMPLEMENTED IN CRAN 2021-02-12
+			tab <- tab[,as.character(periods)] ### UPDATE IMPLEMENTED IN CRAN 2021-02-15
+			tab[tab>0] <- 1 ### UPDATE IMPLEMENTED IN CRAN 2021-02-15
+			return(tab) ### UPDATE IMPLEMENTED IN CRAN 2021-02-15
 		}
 		if (data_format == "groups") {
 			tab <- matrix(0, n_inds, length(periods), dimnames=list(ids, periods))

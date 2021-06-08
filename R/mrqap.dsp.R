@@ -81,7 +81,7 @@ mrqap.dsp <- function (formula, intercept = TRUE, directed = "undirected", diago
 	for (i in 1:nx) {
 		get_x_correlation <- getfit(x[,,i],x[,,c((1:nx)[-i]),drop=FALSE], tol = tol)
 		x_residuals <- x[,,i]
-		x_residuals[which_xs] <- qr.resid(get_x_correlation[[1]], get_x_correlation[[2]])[which_xs]
+		x_residuals[which_xs] <- qr.resid(get_x_correlation[[1]], get_x_correlation[[2]])#[which_xs]
 		if (directed == "undirected") x_residuals[upper.tri(x_residuals)] <- t(x_residuals)[upper.tri(x_residuals)]
 		for (j in 1:randomisations) {
 			newx <- x
