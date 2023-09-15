@@ -142,7 +142,7 @@ get_network <- function(association_data, data_format = "GBI", association_index
 		if (association_index == "SRI") {
 			out <- x / (x + ya + yb + yab)
 		} else if (association_index == "HWI") {
-			out <- x / (x + ya + yb + 0.5*yab)
+			out <- x / (x + 0.5*(ya + yb) + yab)
 		}
 		return(out)
 	}
@@ -159,7 +159,7 @@ get_network <- function(association_data, data_format = "GBI", association_index
 		if (association_index == "SRI") {
 			out <- x / (x + ya_b + yab)
 		} else if (association_index == "HWI") {
-			out <- x / (x + ya_b + 0.5*yab)
+			out <- x / (x + 0.5*ya_b + yab)
 		}
 		return(out)
 	}

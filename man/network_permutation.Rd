@@ -97,7 +97,7 @@ Performs permutations on the group by individual matrix as given by Whitehead (2
 
 This implementation allows permutations (swaps) to be restricted to within any of three classes.  Though each class is labelled, the function is flexible.  Hence, days can represent any time period (months, hours, etc.).
 
-Trial swaps are implemented following Miklos and Podani (2004). Every permutation, a candidate swap is selected. If the selected portions of the data satisfy the baseline rules (e.g. the checkerboard pattern), then either the selection is attempted again \code{trialSwap = FALSE} or not \code{trialSwap = TRUE}. This should be set to TRUE, but the option for FALSE is provided for legacy analyses.
+Swaps are implemented in a hybrid between the trial swaps proposed by Miklos and Podani (2004) and full swaps (a swap every permutation). Every permutation, a candidate edge is selected (as opposed to a dyad which could or could not have an edge, as proposed by Miklos and Podani). Then a second possible dyad is selected, from all dyads. If the selected portions of the data satisfy the baseline rules (e.g. the checkerboard pattern), then either the selection is attempted again \code{trialSwap = FALSE} or not \code{trialSwap = TRUE}. This should be set to TRUE, but the option for FALSE is provided for legacy analyses (full swap).
 
 See get_network function for additional details on each field.
 }
